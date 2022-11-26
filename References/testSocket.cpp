@@ -10,7 +10,7 @@
 #pragma comment(lib,"ws2_32")
 
 /*
-i686-w64-mingw32-g++ -static-libstdc++ -static-libgcc -o kellog.exe Kellog.c
+i686-w64-mingw32-g++ -static-libstdc++ -static-libgcc -o kellog.exe Kellog.c -lws232
 */
 
 /* ================================================== */
