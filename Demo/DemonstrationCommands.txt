@@ -1,0 +1,7 @@
+# These commands are for fun, once we get remote access. 
+the goal is to be stealthy but since we're trying to present this to a class
+we might as well have some fun
+
+
+
+To change Wallpaper:
